@@ -29,5 +29,30 @@ app.MapPost("/country", async (Country country, ApplicationDbContext db) =>
     return country;
 });
 
+// Получение страны по коду
+app.MapGet("/country/alpha2/{code}", async (string code, ApplicationDbContext db) =>
+{
+    var country = await db.Countries.FirstOrDefaultAsync(c => c.ISO31661Alpha2Code == code);
+    return country != null ? Results.Ok(country) : Results.NotFound();
+});
+
+app.MapGet("/country/alpha3/{code}", async (string code, ApplicationDbContext db) =>
+{
+    var country = await db.Countries.FirstOrDefaultAsync(c => c.ISO31661Alpha3Code == code);
+    return country != null ? Results.Ok(country) : Results.NotFound();
+});
+
+app.MapGet("/country/numeric/{code}", async (string code, ApplicationDbContext db) =>
+{
+    var country = await db.Countries.FirstOrDefaultAsync(c => c.ISO31661NumericCode == code);
+    return country != null ? Results.Ok(country) : Results.NotFound();
+});
+
+// Получение страны по id
+app.MapGet("/country/{id}", async (int id, ApplicationDbContext db) =>
+{
+    var country = await db.Countries.FindAsync(id);
+    return country != null ? Results.Ok(country) : Results.NotFound();
+});
 
 app.Run();
